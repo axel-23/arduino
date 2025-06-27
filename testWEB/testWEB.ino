@@ -17,6 +17,7 @@
 #define TFT_SCLK 18
 #define TFT_MOSI 23
 #define TFT_BLK 21
+
 #define DISPLAY_WIDTH 240
 #define DISPLAY_HEIGHT 280
 
@@ -53,11 +54,12 @@ struct UploadState {
 };
 
 void setup() {
-  Serial.begin(1150);
+  Serial.begin(115200);
   pinMode(TFT_BLK, OUTPUT);
   digitalWrite(TFT_BLK, HIGH);  // Enciende luz de fondo
   // Inicializar pantalla TFT
   tft.init(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+  tft.setRotation(2);
   tft.fillScreen(ST77XX_BLACK);
   tft.setFont(&FreeSans12pt7b);
   tft.setCursor(30, 30);
@@ -189,6 +191,7 @@ void setupServerRoutes() {
       request->send(response);
     } else if (ext == "jpg" || ext == "jpeg") {
       gifActivo = false;
+      tft.fillScreen(ST77XX_BLACK);
       show_jpeg(file.c_str(), 0, 0);
       AsyncWebServerResponse *response = request->beginResponse(200, "application/json", createJsonResponse("success", "Mostrando JPEG"));
       enableCORS(response);
